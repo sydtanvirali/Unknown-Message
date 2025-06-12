@@ -30,19 +30,16 @@ export default function AddTopic() {
 
     try {
       const res = await addTopic({ title, description }).unwrap();
+
       if (res.success) {
         toast.success(res.message || "Topic added successfully");
       }
-
       // Reset form and close dialog
       (event.target as HTMLFormElement).reset();
       setOpen(false);
     } catch (error) {
-      toast.error(
-        error?.data?.error?.issues[0]?.message ||
-          error?.data.message ||
-          `Something went wrong.`,
-      );
+      console.log(error);
+      toast.error(`Something went wrong.`);
     }
   };
   return (

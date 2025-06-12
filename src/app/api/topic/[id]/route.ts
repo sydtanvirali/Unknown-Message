@@ -9,7 +9,7 @@ import MessageModel from "@/models/Message";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
   const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function GET(
         success: false,
         message: "Unauthorized User",
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
   const email = session.user?.email;
@@ -33,7 +33,7 @@ export async function GET(
           success: false,
           message: "User not found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -44,7 +44,7 @@ export async function GET(
           success: false,
           message: "No topics found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
     if (!topic.userId === user._id) {
@@ -53,7 +53,7 @@ export async function GET(
           success: false,
           message: "Topic not owned by user",
         },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -63,23 +63,23 @@ export async function GET(
         message: "Topic retrieved successfully",
         data: topic,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
         message: "Topic retrieval failed",
-        error: error as Error,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
   const session = await getServerSession(authOptions);
@@ -90,7 +90,7 @@ export async function DELETE(
         success: false,
         message: "Unauthorized User",
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
@@ -105,7 +105,7 @@ export async function DELETE(
           success: false,
           message: "User not found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -116,7 +116,7 @@ export async function DELETE(
           success: false,
           message: "No topics found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
     if (!topic.userId === user._id) {
@@ -125,7 +125,7 @@ export async function DELETE(
           success: false,
           message: "Topic not owned by user",
         },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -137,7 +137,7 @@ export async function DELETE(
           success: false,
           message: "Topic deletion failed",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -147,16 +147,16 @@ export async function DELETE(
         message: "Topic deleted successfully",
         data: deletedTopic,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
+    console.log("Error deleting topic:", error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
         message: "Topic retrieval failed",
-        error: error as Error,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

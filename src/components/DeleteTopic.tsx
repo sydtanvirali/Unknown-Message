@@ -28,7 +28,8 @@ export default function DeleteTopic({ topicId }: { topicId: string }) {
         router.push("/");
       }
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to delete topic");
+      console.log(error);
+      toast.error("Failed to delete topic");
     }
   };
 

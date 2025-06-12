@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         success: false,
         message: "Unauthorized User",
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
   const email = session.user?.email;
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         message: "Invalid request",
         data: result.error,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           success: false,
           message: "User not found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           success: false,
           message: "Topic creation failed",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
     return NextResponse.json<ApiResponse>(
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         message: "Topic created successfully",
         data: topic,
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.log(error);
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
         success: false,
         message: "Topic creation failed",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -93,7 +93,7 @@ export async function GET() {
         success: false,
         message: "Unauthorized User",
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
   const email = session.user?.email;
@@ -144,7 +144,7 @@ export async function GET() {
           success: false,
           message: "No topics found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
     return NextResponse.json<ApiResponse>(
@@ -153,7 +153,7 @@ export async function GET() {
         message: "Topics retrieved successfully",
         data: topics,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -162,7 +162,7 @@ export async function GET() {
         success: false,
         message: "Topic retrieval failed",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -42,7 +42,13 @@ export default function MessagePage({
           toast.error("Failed to fetch AI suggestions.");
         });
     }
-  }, [isSuccess, data?.data?._id, getSuggestedMessages]);
+  }, [
+    isSuccess,
+    data?.data?._id,
+    data?.data?.title,
+    data?.data?.description,
+    getSuggestedMessages,
+  ]);
 
   const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,7 +65,7 @@ export default function MessagePage({
       }
     } catch (error) {
       console.error("Failed to send message:", error);
-      toast.error(error?.data.message || "Something wents wrong.");
+      toast.error("Something wents wrong.");
     }
   };
 

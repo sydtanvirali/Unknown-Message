@@ -1,6 +1,5 @@
 "use client";
 import { useGetTopicByIdQuery } from "@/services/topic";
-import { useSearchParams } from "next/navigation";
 import { useGetMessagesQuery } from "@/services/message";
 import { Card, CardContent } from "@/components/ui/card";
 import Message from "@/types/Message";
@@ -16,10 +15,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import React from "react";
 
-export default function MessagesPage() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("topicId");
+export default function MessagesPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = React.use(params);
   const { data, isLoading, isSuccess, isError } = useGetTopicByIdQuery(id);
   const {
     data: mData,

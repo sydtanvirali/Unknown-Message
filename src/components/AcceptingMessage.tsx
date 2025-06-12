@@ -28,16 +28,13 @@ export default function AcceptingMessage({ topicId }: { topicId: string }) {
       }).unwrap();
       if (res.success) {
         toast.success(
-          res?.message || "Message acceptance status updated successfully",
+          res?.message || "Message acceptance status updated successfully"
         );
       }
       setIsAccepting(checked);
     } catch (error) {
       console.log(error);
-      toast.error(
-        error?.data?.issues.message ||
-          "Failed to update message acceptance status",
-      );
+      toast.error("Failed to update message acceptance status");
     }
   };
 
