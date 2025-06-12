@@ -34,9 +34,9 @@ export default function LoginPage() {
         <p className="mx-auto mt-8 max-w-4xl text-wrap text-sm md:text-lg">
           A simple and secure web app where you can log in with Google, create
           discussion topics, and share them with anyone. People with your link
-          can respond anonymously—whether it's feedback, opinions, experiences,
-          or suggestions—without needing an account. Perfect for collecting
-          honest thoughts, anywhere.
+          can respond anonymously—whether it&#39;s feedback, opinions,
+          experiences, or suggestions—without needing an account. Perfect for
+          collecting honest thoughts, anywhere.
         </p>
 
         <div className="mt-8">

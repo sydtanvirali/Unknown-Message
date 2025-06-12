@@ -9,7 +9,6 @@ import Link from "next/link";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import StatusBadge from "@/components/StatusBadge";
 import { formatRelativeTime } from "@/lib/date-utils";
-import { Button } from "@/components/ui/button";
 
 export default function App() {
   const { status } = useSession();
