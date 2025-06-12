@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "Unauthorized User.",
       },
-      { status: 401 },
+      { status: 401 }
     );
   }
   const email = session.user?.email;
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
         message: "Invalid request.",
         data: result.error,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
   const { acceptMessages, topicId } = result.data;
@@ -43,35 +43,35 @@ export async function POST(request: NextRequest) {
           success: false,
           message: "User not found.",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
-    const topic = TopicModel.findById(topicId);
+    const topic = await TopicModel.findById(topicId);
     if (!topic) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
           message: "Topic not found.",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
-    if (!topic.userId === user._id) {
+    if (topic._id === user._id) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
           message: "Topic not owned by user.",
         },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
     const updatedTopic = await TopicModel.findByIdAndUpdate(
       topicId,
       { isAcceptingMessages: acceptMessages },
-      { new: true },
+      { new: true }
     );
 
     if (!updatedTopic) {
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
           success: false,
           message: "Failed to update message acceptance status.",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         message: "Message acceptance status updated successfully",
         data: { isAcceptingMessage: updatedTopic.isAcceptingMessage },
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "Failed to update message acceptance status",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
