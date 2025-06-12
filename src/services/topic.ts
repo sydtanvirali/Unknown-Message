@@ -2,7 +2,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const topicApi = createApi({
   reducerPath: "topicApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}` }),
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    prepareHeaders: (headers, { endpoint }) => {
+      // Add public request header for send-message page
+      if (endpoint === 'getTopicByIdPublic') {
+        headers.set('x-public-request', 'true');
+      }
+      return headers;
+    },
+  }),
   tagTypes: ["Topic"],
   endpoints: (builder) => ({
     getTopics: builder.query({
@@ -10,6 +19,10 @@ export const topicApi = createApi({
       providesTags: ["Topic"],
     }),
     getTopicById: builder.query({
+      query: (id) => `/topic/${id}`,
+      providesTags: ["Topic"],
+    }),
+    getTopicByIdPublic: builder.query({
       query: (id) => `/topic/${id}`,
       providesTags: ["Topic"],
     }),
@@ -34,6 +47,7 @@ export const topicApi = createApi({
 export const {
   useGetTopicsQuery,
   useGetTopicByIdQuery,
+  useGetTopicByIdPublicQuery,
   useAddTopicMutation,
   useDeleteTopicMutation,
 } = topicApi;

@@ -44,7 +44,8 @@ export async function GET(
         { status: 404 },
       );
     }
-    if (!topic.userId === user._id) {
+    // Fixed comparison operator
+    if (topic.userId.toString() !== user._id.toString()) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,

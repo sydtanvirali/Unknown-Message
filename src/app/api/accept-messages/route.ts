@@ -58,7 +58,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (topic._id === user._id) {
+    // Fixed comparison operator
+    if (topic.userId.toString() !== user._id.toString()) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "Message acceptance status updated successfully",
-        data: { isAcceptingMessage: updatedTopic.isAcceptingMessage },
+        data: { isAcceptingMessages: updatedTopic.isAcceptingMessages },
       },
       { status: 200 }
     );

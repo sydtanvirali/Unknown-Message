@@ -12,68 +12,107 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json<ApiResponse>(
-      {
-        success: false,
-        message: "Unauthorized User",
-      },
-      { status: 401 }
-    );
-  }
-  const email = session.user?.email;
   const { id } = await params;
-  try {
-    const user = await UserModel.findOne({ email: email });
-    if (!user) {
+  
+  // Check if this is a public request (for send-message page)
+  const isPublicRequest = request.headers.get('x-public-request') === 'true';
+  
+  if (!isPublicRequest) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: "User not found",
-        },
-        { status: 404 }
-      );
-    }
-
-    const topic = await TopicModel.findById(id);
-    if (!topic) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "No topics found",
-        },
-        { status: 404 }
-      );
-    }
-    if (!topic.userId === user._id) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "Topic not owned by user",
+          message: "Unauthorized User",
         },
         { status: 401 }
       );
     }
+    
+    const email = session.user?.email;
+    try {
+      const user = await UserModel.findOne({ email: email });
+      if (!user) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "User not found",
+          },
+          { status: 404 }
+        );
+      }
 
-    return NextResponse.json<ApiResponse>(
-      {
-        success: true,
-        message: "Topic retrieved successfully",
-        data: topic,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json<ApiResponse>(
-      {
-        success: false,
-        message: "Topic retrieval failed",
-      },
-      { status: 500 }
-    );
+      const topic = await TopicModel.findById(id);
+      if (!topic) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "No topics found",
+          },
+          { status: 404 }
+        );
+      }
+      // Fixed comparison operator
+      if (topic.userId.toString() !== user._id.toString()) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "Topic not owned by user",
+          },
+          { status: 401 }
+        );
+      }
+
+      return NextResponse.json<ApiResponse>(
+        {
+          success: true,
+          message: "Topic retrieved successfully",
+          data: topic,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Topic retrieval failed",
+        },
+        { status: 500 }
+      );
+    }
+  } else {
+    // Public request - just return topic data without ownership check
+    try {
+      const topic = await TopicModel.findById(id);
+      if (!topic) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "Topic not found",
+          },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json<ApiResponse>(
+        {
+          success: true,
+          message: "Topic retrieved successfully",
+          data: topic,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Topic retrieval failed",
+        },
+        { status: 500 }
+      );
+    }
   }
 }
 
@@ -119,7 +158,8 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    if (!topic.userId === user._id) {
+    // Fixed comparison operator
+    if (topic.userId.toString() !== user._id.toString()) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -154,7 +194,7 @@ export async function DELETE(
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Topic retrieval failed",
+        message: "Topic deletion failed",
       },
       { status: 500 }
     );

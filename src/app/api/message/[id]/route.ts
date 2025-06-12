@@ -45,7 +45,8 @@ export async function GET(
         { status: 404 },
       );
     }
-    if (!topic.userId === user._id) {
+    // Fixed comparison operator
+    if (topic.userId.toString() !== user._id.toString()) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -72,6 +73,7 @@ export async function GET(
       {
         $unwind: {
           path: "$message",
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -83,7 +85,13 @@ export async function GET(
         $group: {
           _id: "$_id",
           messages: {
-            $push: "$message",
+            $push: {
+              $cond: [
+                { $ifNull: ["$message", false] },
+                "$message",
+                "$$REMOVE"
+              ]
+            }
           },
         },
       },
@@ -95,20 +103,11 @@ export async function GET(
       },
     ]);
 
-    if (!messages) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "Messages not found",
-        },
-        { status: 404 },
-      );
-    }
     return NextResponse.json<ApiResponse>(
       {
         success: true,
         message: "Messages fetched successfully",
-        data: messages,
+        data: messages.length > 0 ? messages : [{ messages: [] }],
       },
       { status: 200 },
     );
