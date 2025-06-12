@@ -1,6 +1,12 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import { GalleryVerticalEnd, Rocket, MessageSquare, Shield, Users } from "lucide-react";
+import {
+  GalleryVerticalEnd,
+  Rocket,
+  MessageSquare,
+  Shield,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -17,7 +23,9 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     await signIn("google", { callbackUrl: "/" });
+    setLoading(false);
   };
 
   if (status === "loading") {
@@ -57,9 +65,11 @@ export default function LoginPage() {
                   anonymously
                 </span>
               </h2>
-              
+
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                A simple and secure platform where you can create discussion topics and receive honest, anonymous feedback from anyone with your link.
+                A simple and secure platform where you can create discussion
+                topics and receive honest, anonymous feedback from anyone with
+                your link.
               </p>
             </div>
 
@@ -102,7 +112,8 @@ export default function LoginPage() {
                     Easy Sharing
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Share your topic link anywhere - no signup required for senders
+                    Share your topic link anywhere - no signup required for
+                    senders
                   </p>
                 </div>
               </div>
@@ -110,8 +121,8 @@ export default function LoginPage() {
 
             {/* CTA */}
             <div className="pt-4">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handleGoogleSignIn}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-4 rounded-lg transition-colors duration-200 flex items-center gap-3 text-lg"
               >
@@ -137,14 +148,16 @@ export default function LoginPage() {
                   </h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Share your honest thoughts and suggestions for making our product better.
+                  Share your honest thoughts and suggestions for making our
+                  product better.
                 </p>
               </div>
 
               <div className="space-y-3">
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    "The interface could be more intuitive. Maybe add a tutorial for new users?"
+                    "The interface could be more intuitive. Maybe add a tutorial
+                    for new users?"
                   </p>
                   <div className="flex items-center gap-2 mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -154,7 +167,8 @@ export default function LoginPage() {
 
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    "Love the concept! It would be great to have message categories."
+                    "Love the concept! It would be great to have message
+                    categories."
                   </p>
                   <div className="flex items-center gap-2 mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
