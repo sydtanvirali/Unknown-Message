@@ -1,57 +1,50 @@
 "use client";
-import { signIn } from "next-auth/react";
-import { GalleryVerticalEnd } from "lucide-react";
+import { signIn, useSession } from "next-auth/react";
+import { GalleryVerticalEnd, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 export default function LoginPage() {
+  const { status } = useSession();
+
   const handleGoogleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     await signIn("google", { callbackUrl: "/" });
   };
 
+  if (status === "authenticated") {
+    // Redirect to home page if already authenticated
+    window.location.href = "/";
+    return null;
+  }
+
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <a href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          Unknown Message.
-        </a>
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Welcome</CardTitle>
-            <CardDescription>Login with your Google account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="grid gap-6">
-                <div className="flex flex-col gap-4">
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={handleGoogleSignIn}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path
-                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Login with Google
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+    <div className="bg-background backdrop-blur flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <a href="#" className="flex items-center gap-2 self-center font-medium">
+        <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+          <GalleryVerticalEnd className="size-4" />
+        </div>
+        Unknown Message
+      </a>
+
+      <div className="text-center sm:mx-auto sm:w-10/12 lg:mr-auto lg:mt-0 lg:w-4/5">
+        <h1 className="mt-8 text-3xl font-semibold md:text-5xl xl:text-5xl xl:[line-height:1.125]">
+          Empower others to share thoughts,
+          <br /> opinions, and experiences without revealing their identity.
+        </h1>
+        <p className="mx-auto mt-8 max-w-4xl text-wrap text-sm md:text-lg">
+          A simple and secure web app where you can log in with Google, create
+          discussion topics, and share them with anyone. People with your link
+          can respond anonymously—whether it's feedback, opinions, experiences,
+          or suggestions—without needing an account. Perfect for collecting
+          honest thoughts, anywhere.
+        </p>
+
+        <div className="mt-8">
+          <Button size="lg" onClick={handleGoogleSignIn}>
+            <Rocket className="relative size-4" />
+            <span className="text-nowrap">Login with Google</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

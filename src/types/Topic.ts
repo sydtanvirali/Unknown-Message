@@ -1,9 +1,9 @@
-import { Document, Types } from "mongoose";
-
-interface Topic extends Document {
-  userId: Types.ObjectId | string;
+interface Topic {
+  _id?: string;
+  userId?: string;
   title: string;
   description: string;
-  createdAt: Date;
+  isAcceptingMessages?: boolean;
+  createdAt?: Date;
 }
 export default Topic;

@@ -1,7 +1,6 @@
-import User from "@/types/User";
 import mongoose, { Schema } from "mongoose";
 
-const UserSchema: Schema<User> = new Schema({
+const UserSchema = new Schema({
   name: { type: String, required: true },
   email: {
     type: String,
@@ -12,14 +11,8 @@ const UserSchema: Schema<User> = new Schema({
   image: { type: String },
   provider: { type: String },
   providerId: { type: String },
-  isAcceptingMessage: {
-    type: Boolean,
-    default: true,
-  },
 });
 
-const UserModel =
-  (mongoose.models.User as mongoose.Model<User>) ||
-  mongoose.model<User>("User", UserSchema);
+const UserModel = mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default UserModel;

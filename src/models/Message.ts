@@ -1,7 +1,6 @@
-import Message from "@/types/Message";
 import mongoose, { Schema } from "mongoose";
 
-const MessageSchema: Schema<Message> = new Schema({
+const MessageSchema = new Schema({
   topicId: {
     type: Schema.Types.ObjectId,
     ref: "Topic",
@@ -12,7 +11,6 @@ const MessageSchema: Schema<Message> = new Schema({
 });
 
 const MessageModel =
-  (mongoose.models.Message as mongoose.Model<Message>) ||
-  mongoose.model<Message>("Message", MessageSchema);
+  mongoose.models.Message || mongoose.model("Message", MessageSchema);
 
 export default MessageModel;

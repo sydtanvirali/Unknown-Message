@@ -1,7 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import MessageModel from "@/models/Message";
 import TopicModel from "@/models/Topic";
-import UserModel from "@/models/User";
 import { messageSchema } from "@/schemas/messageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,9 +13,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: result.error.message,
+        message: "Invalid request",
+        data: result.error,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
   const { topicId, content } = result.data;
@@ -28,26 +28,17 @@ export async function POST(request: NextRequest) {
           success: false,
           message: "topic not found",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
-    const user = await UserModel.findById(topic.userId);
-    if (!user) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "User not found",
-        },
-        { status: 404 },
-      );
-    }
-    if (!user.isAcceptingMessage) {
+
+    if (!topic.isAcceptingMessages) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
           message: "User is not accepting messages",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const message = await MessageModel.create({
@@ -60,7 +51,7 @@ export async function POST(request: NextRequest) {
           success: false,
           message: "Message not sent",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
     return NextResponse.json<ApiResponse>(
@@ -69,7 +60,7 @@ export async function POST(request: NextRequest) {
         message: "Message sent successfully",
         data: message,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -78,7 +69,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

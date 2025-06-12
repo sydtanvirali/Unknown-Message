@@ -1,13 +1,16 @@
 import dbConnect from "@/lib/dbConnect";
+import { ApiResponse } from "@/types/ApiResponse";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/options";
-import { ApiResponse } from "@/types/ApiResponse";
-import { topicSchema } from "@/schemas/topicSchema";
+import { authOptions } from "../../auth/[...nextauth]/options";
 import TopicModel from "@/models/Topic";
 import UserModel from "@/models/User";
+import MessageModel from "@/models/Message";
 
-export async function POST(req: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   await dbConnect();
   const session = await getServerSession(authOptions);
 
@@ -21,22 +24,7 @@ export async function POST(req: NextRequest) {
     );
   }
   const email = session.user?.email;
-
-  const body = await req.json();
-  const result = topicSchema.safeParse(body);
-
-  if (!result.success) {
-    return NextResponse.json<ApiResponse>(
-      {
-        success: false,
-        message: "Invalid request",
-        data: result.error,
-      },
-      { status: 400 },
-    );
-  }
-
-  const { title, description } = result.data;
+  const { id } = await params;
   try {
     const user = await UserModel.findOne({ email: email });
     if (!user) {
@@ -49,41 +37,50 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const topic = await TopicModel.create({
-      userId: user._id,
-      title,
-      description,
-    });
+    const topic = await TopicModel.findById(id);
     if (!topic) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: "Topic creation failed",
+          message: "No topics found",
         },
-        { status: 500 },
+        { status: 404 },
       );
     }
+    if (!topic.userId === user._id) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Topic not owned by user",
+        },
+        { status: 401 },
+      );
+    }
+
     return NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "Topic created successfully",
+        message: "Topic retrieved successfully",
         data: topic,
       },
-      { status: 201 },
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Topic creation failed",
+        message: "Topic retrieval failed",
+        error: error as Error,
       },
       { status: 500 },
     );
   }
 }
 
-export async function GET() {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   await dbConnect();
   const session = await getServerSession(authOptions);
 
@@ -96,49 +93,24 @@ export async function GET() {
       { status: 401 },
     );
   }
+
   const email = session.user?.email;
+  const { id } = await params;
 
   try {
-    const topics = await UserModel.aggregate([
-      {
-        $match: {
-          email: email,
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "User not found",
         },
-      },
-      {
-        $lookup: {
-          from: "topics",
-          localField: "_id",
-          foreignField: "userId",
-          as: "topic",
-        },
-      },
-      {
-        $unwind: {
-          path: "$topic",
-        },
-      },
-      {
-        $sort: {
-          "topic.createdAt": -1,
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          topics: {
-            $push: "$topic",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          topics: 1,
-        },
-      },
-    ]);
-    if (!topics) {
+        { status: 404 },
+      );
+    }
+
+    const topic = await TopicModel.findById(id);
+    if (!topic) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -147,20 +119,42 @@ export async function GET() {
         { status: 404 },
       );
     }
+    if (!topic.userId === user._id) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Topic not owned by user",
+        },
+        { status: 401 },
+      );
+    }
+
+    await MessageModel.deleteMany({ topicId: topic._id });
+    const deletedTopic = await TopicModel.findByIdAndDelete({ _id: topic._id });
+    if (!deletedTopic) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "Topic deletion failed",
+        },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "Topics retrieved successfully",
-        data: topics,
+        message: "Topic deleted successfully",
+        data: deletedTopic,
       },
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
         message: "Topic retrieval failed",
+        error: error as Error,
       },
       { status: 500 },
     );

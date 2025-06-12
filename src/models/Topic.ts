@@ -1,7 +1,6 @@
-import Topic from "@/types/Topic";
 import mongoose, { Schema } from "mongoose";
 
-const TopicSchema: Schema<Topic> = new Schema({
+const TopicSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -9,11 +8,14 @@ const TopicSchema: Schema<Topic> = new Schema({
   },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  isAcceptingMessages: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
 const TopicModel =
-  (mongoose.models.Topic as mongoose.Model<Topic>) ||
-  mongoose.model<Topic>("Topic", TopicSchema);
+  mongoose.models.Topic || mongoose.model("Topic", TopicSchema);
 
 export default TopicModel;

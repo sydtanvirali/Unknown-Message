@@ -1,10 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
-import { ApiResponse } from "@/types/ApiResponse";
-import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
-import TopicModel from "@/models/Topic";
+import { NextRequest, NextResponse } from "next/server";
+import { ApiResponse } from "@/types/ApiResponse";
 import UserModel from "@/models/User";
+import TopicModel from "@/models/Topic";
 
 export async function GET(
   request: NextRequest,
@@ -23,7 +23,6 @@ export async function GET(
   }
   const email = session.user?.email;
   const { id } = await params;
-
   try {
     const user = await UserModel.findOne({ email: email });
     if (!user) {
@@ -54,70 +53,20 @@ export async function GET(
         { status: 401 },
       );
     }
-
-    const messages = await TopicModel.aggregate([
-      {
-        $match: {
-          _id: topic._id,
-        },
-      },
-      {
-        $lookup: {
-          from: "messages",
-          localField: "_id",
-          foreignField: "topicId",
-          as: "message",
-        },
-      },
-      {
-        $unwind: {
-          path: "$message",
-        },
-      },
-      {
-        $sort: {
-          "message.createdAt": -1,
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          messages: {
-            $push: "$message",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          messages: 1,
-        },
-      },
-    ]);
-
-    if (!messages) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          message: "Messages not found",
-        },
-        { status: 404 },
-      );
-    }
     return NextResponse.json<ApiResponse>(
       {
         success: true,
-        message: "Messages fetched successfully",
-        data: messages,
+        message: "Fetch message acceptance status successfully.",
+        data: { isAcceptingMessages: topic.isAcceptingMessages },
       },
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.log("failed to get user", error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
-        message: "Error fetching messages",
+        message: "Failed to get message acceptance status.",
       },
       { status: 500 },
     );

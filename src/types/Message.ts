@@ -1,8 +1,7 @@
-import { Document, Types } from "mongoose";
-
-interface Message extends Document {
-  topicId: Types.ObjectId | string;
+interface Message {
+  _id?: string;
+  topicId: string;
   content: string;
-  createdAt: Date;
+  createdAt?: Date;
 }
 export default Message;
