@@ -34,9 +34,9 @@ export default function AddTopic({ children }: { children?: React.ReactNode }) {
     }
 
     try {
-      const res = await addTopic({ 
-        title: title.trim(), 
-        description: description.trim() 
+      const res = await addTopic({
+        title: title.trim(),
+        description: description.trim(),
       }).unwrap();
 
       if (res.success) {
@@ -44,13 +44,9 @@ export default function AddTopic({ children }: { children?: React.ReactNode }) {
         (event.target as HTMLFormElement).reset();
         setOpen(false);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      if (error?.data?.message) {
-        toast.error(error.data.message);
-      } else {
-        toast.error("Something went wrong.");
-      }
+      toast.error("Something went wrong.");
     }
   };
 
@@ -67,9 +63,12 @@ export default function AddTopic({ children }: { children?: React.ReactNode }) {
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="pb-4">
-            <DialogTitle className="text-xl font-semibold">Create New Topic</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">
+              Create New Topic
+            </DialogTitle>
             <DialogDescription className="text-gray-600 dark:text-gray-300">
-              Create a topic to receive anonymous messages. Share the link with anyone to collect feedback, opinions, or suggestions.
+              Create a topic to receive anonymous messages. Share the link with
+              anyone to collect feedback, opinions, or suggestions.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -77,12 +76,12 @@ export default function AddTopic({ children }: { children?: React.ReactNode }) {
               <Label htmlFor="title" className="text-sm font-medium">
                 Topic Title
               </Label>
-              <Input 
-                id="title" 
-                name="title" 
+              <Input
+                id="title"
+                name="title"
                 placeholder="Enter a descriptive title..."
-                maxLength={100} 
-                required 
+                maxLength={100}
+                required
                 className="focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -107,17 +106,17 @@ export default function AddTopic({ children }: { children?: React.ReactNode }) {
             </div>
           </div>
           <DialogFooter className="pt-6">
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => setOpen(false)}
               disabled={isLoading}
               className="mr-2"
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
             >

@@ -60,8 +60,12 @@ export default function MessagesPage({
 
                 {/* Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                  <AcceptingMessage topicId={data?.data._id} />
-                  <div className="flex gap-3">
+                  {/* Left: AcceptingMessage */}
+                  <div className="sm:order-1 w-full sm:w-auto">
+                    <AcceptingMessage topicId={data?.data._id} />
+                  </div>
+                  {/* Right: Share and Delete */}
+                  <div className="flex gap-3 sm:order-2 w-full sm:w-auto justify-end">
                     <ShareTopic topicId={data?.data._id}>
                       <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
                         <Share className="w-4 h-4" />
@@ -89,7 +93,7 @@ export default function MessagesPage({
             </h2>
             {result.length > 0 && (
               <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
-                {result.length} message{result.length !== 1 ? 's' : ''}
+                {result.length} message{result.length !== 1 ? "s" : ""}
               </span>
             )}
           </div>
@@ -98,21 +102,23 @@ export default function MessagesPage({
             <MessageSkeleton />
           ) : isSuccess ? (
             result.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mSuccess &&
                   result.map((message: Message, index: number) => (
                     <Popover key={index}>
                       <PopoverTrigger asChild>
                         <Card className="h-full transition-all duration-300 hover:shadow-xl hover:scale-[1.02] cursor-pointer border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden group">
-                          <CardContent className="p-6">
+                          <CardContent className="py-0 h-full">
                             <p className="text-gray-700 dark:text-gray-300 line-clamp-4 leading-relaxed mb-4 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
                               {message?.content}
                             </p>
-                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                              <Calendar className="w-3 h-3" />
-                              <span>{formatRelativeTime(message?.createdAt || "")}</span>
-                            </div>
                           </CardContent>
+                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mx-5">
+                            <Calendar className="w-3 h-3" />
+                            <span>
+                              {formatRelativeTime(message?.createdAt || "")}
+                            </span>
+                          </div>
                         </Card>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 p-4">
@@ -125,7 +131,10 @@ export default function MessagesPage({
                           </p>
                           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
                             <Calendar className="w-3 h-3" />
-                            <span>Received {formatRelativeTime(message?.createdAt || "")}</span>
+                            <span>
+                              Received{" "}
+                              {formatRelativeTime(message?.createdAt || "")}
+                            </span>
                           </div>
                         </div>
                       </PopoverContent>

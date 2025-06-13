@@ -19,7 +19,8 @@ export default function MessagePage({
 }) {
   const { id } = React.use(params);
 
-  const { data, isLoading, isSuccess, isError } = useGetTopicByIdPublicQuery(id);
+  const { data, isLoading, isSuccess, isError } =
+    useGetTopicByIdPublicQuery(id);
   const [getSuggestedMessages, { isLoading: suggestedMessagesLoading }] =
     useGetSuggestedMessagesMutation();
   const [sendMessage, { isLoading: sendingMessage }] = useSendMessageMutation();
@@ -55,7 +56,6 @@ export default function MessagePage({
 
   const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
     if (!messageInput.trim()) {
       toast.error("Please enter a message");
       return;
@@ -76,11 +76,7 @@ export default function MessagePage({
       }
     } catch (error: any) {
       console.error("Failed to send message:", error);
-      if (error?.data?.message) {
-        toast.error(error.data.message);
-      } else {
-        toast.error("Something went wrong.");
-      }
+      toast.error("Something went wrong.");
     }
   };
 
@@ -131,7 +127,7 @@ export default function MessagePage({
                   <p className="text-gray-600 dark:text-gray-300 mb-6">
                     Your anonymous message has been delivered successfully.
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => setMessageSent(false)}
                     variant="outline"
                     className="w-full"
@@ -188,7 +184,10 @@ export default function MessagePage({
                   <CardContent>
                     <form onSubmit={handleSendMessage} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="message" className="text-sm font-medium">
+                        <Label
+                          htmlFor="message"
+                          className="text-sm font-medium"
+                        >
                           Your anonymous message
                         </Label>
                         <Textarea
@@ -204,21 +203,27 @@ export default function MessagePage({
                           <span className="text-gray-500 dark:text-gray-400">
                             Message must be between 10-300 characters
                           </span>
-                          <span className={`font-medium ${
-                            messageInput.length > 300 
-                              ? 'text-red-500' 
-                              : messageInput.length > 250 
-                                ? 'text-yellow-500' 
-                                : 'text-gray-500 dark:text-gray-400'
-                          }`}>
+                          <span
+                            className={`font-medium ${
+                              messageInput.length > 300
+                                ? "text-red-500"
+                                : messageInput.length > 250
+                                ? "text-yellow-500"
+                                : "text-gray-500 dark:text-gray-400"
+                            }`}
+                          >
                             {messageInput.length}/300
                           </span>
                         </div>
                       </div>
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-                        disabled={sendingMessage || messageInput.length < 10 || messageInput.length > 300}
+                        disabled={
+                          sendingMessage ||
+                          messageInput.length < 10 ||
+                          messageInput.length > 300
+                        }
                       >
                         {sendingMessage ? (
                           <>
@@ -239,7 +244,8 @@ export default function MessagePage({
                 {/* Privacy Notice */}
                 <div className="text-center">
                   <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                    🔒 Your message is completely anonymous. No personal information is collected or stored.
+                    🔒 Your message is completely anonymous. No personal
+                    information is collected or stored.
                   </p>
                 </div>
               </div>

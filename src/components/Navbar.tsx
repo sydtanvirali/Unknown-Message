@@ -27,7 +27,10 @@ export default function Navbar(props: {
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between max-w-7xl">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <Link
+          href="/"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-lg">
             <GalleryVerticalEnd className="w-6 h-6 text-white" />
           </div>
@@ -57,7 +60,10 @@ export default function Navbar(props: {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Button
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full"
+              >
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={props?.image} alt={props?.name} />
                   <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
@@ -99,7 +105,7 @@ export default function Navbar(props: {
                 </Link>
                 <DropdownMenuItem
                   className="cursor-pointer text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
-                  onSelect={() => signOut({ callbackUrl: '/auth/login' })}
+                  onSelect={() => signOut({ callbackUrl: "/auth/login" })}
                 >
                   <LogOut className="w-4 h-4 mr-3" />
                   <span>Sign out</span>

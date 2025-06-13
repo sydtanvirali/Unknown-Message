@@ -16,17 +16,17 @@ import { useRef, useState } from "react";
 import { Copy, Check, Share, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
-export default function ShareTopic({ 
-  topicId, 
-  children 
-}: { 
+export default function ShareTopic({
+  topicId,
+  children,
+}: {
   topicId: string;
   children?: React.ReactNode;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
 
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const shareUrl = `${baseUrl}/send-message/${topicId}`;
 
   const handleCopy = async () => {
@@ -38,6 +38,7 @@ export default function ShareTopic({
         toast.success("Link copied to clipboard!");
         setTimeout(() => setCopied(false), 2000);
       } catch (error) {
+        console.log(error);
         toast.error("Failed to copy link");
       }
     }
@@ -47,13 +48,13 @@ export default function ShareTopic({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Send me an anonymous message',
-          text: 'Share your thoughts with me anonymously',
+          title: "Send me an anonymous message",
+          text: "Share your thoughts with me anonymously",
           url: shareUrl,
         });
       } catch (error) {
         // User cancelled sharing or error occurred
-        console.log('Share cancelled or failed');
+        console.log(error);
       }
     } else {
       handleCopy();
@@ -72,26 +73,27 @@ export default function ShareTopic({
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex gap-2">
             <Share className="w-5 h-5 text-blue-600" />
             Share Your Topic
           </DialogTitle>
-          <DialogDescription>
-            Share this link with anyone to receive anonymous messages. They don't need to create an account.
+          <DialogDescription className="text-left">
+            Share this link with anyone to receive anonymous messages. They
+            don&#39;t need to create an account.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="link" className="text-sm font-medium">
               Topic Link
             </Label>
             <div className="flex gap-2">
-              <Input 
-                id="link" 
-                ref={inputRef} 
-                defaultValue={shareUrl} 
-                readOnly 
+              <Input
+                id="link"
+                ref={inputRef}
+                defaultValue={shareUrl}
+                readOnly
                 className="flex-1 bg-gray-50 dark:bg-gray-800"
               />
               <Button
@@ -118,7 +120,8 @@ export default function ShareTopic({
                   How it works
                 </p>
                 <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                  Anyone with this link can send you anonymous messages without creating an account. Perfect for collecting honest feedback!
+                  Anyone with this link can send you anonymous messages without
+                  creating an account. Perfect for collecting honest feedback!
                 </p>
               </div>
             </div>
@@ -127,16 +130,20 @@ export default function ShareTopic({
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button type="button" variant="outline" className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               Close
             </Button>
           </DialogClose>
-          <Button 
-            type="button" 
+          <Button
+            type="button"
             onClick={handleShare}
             className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
           >
-            {navigator.share ? (
+            {"share" in navigator ? (
               <>
                 <Share className="w-4 h-4 mr-2" />
                 Share Link

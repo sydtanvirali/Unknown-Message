@@ -44,33 +44,41 @@ export default function App() {
           <ErrorPage />
         ) : isSuccess ? (
           data?.data.length !== 0 && result?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {result?.map((topic: Topic, index: number) => (
-                <Link href={`/topic/${topic._id}`} key={index} className="group">
+                <Link
+                  href={`/topic/${topic._id}`}
+                  key={index}
+                  className="group"
+                >
                   <Card className="h-full transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between gap-3">
                         <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {topic.title}
                         </CardTitle>
-                        <StatusBadge topicId={topic._id?.toString() as string} />
+                        <StatusBadge
+                          topicId={topic._id?.toString() as string}
+                        />
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-0">
+                    <CardContent className="pt-0 h-full">
                       <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4 leading-relaxed">
                         {topic.description}
                       </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{formatRelativeTime(topic?.createdAt || "")}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                          <MessageSquare className="w-3 h-3" />
-                          <span className="font-medium">View</span>
-                        </div>
-                      </div>
                     </CardContent>
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mx-5">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>
+                          {formatRelativeTime(topic?.createdAt || "")}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                        <MessageSquare className="w-3 h-3" />
+                        <span className="font-medium">View</span>
+                      </div>
+                    </div>
                   </Card>
                 </Link>
               ))}
@@ -86,7 +94,8 @@ export default function App() {
                   No topics yet
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  Create your first topic to start receiving anonymous messages from others.
+                  Create your first topic to start receiving anonymous messages
+                  from others.
                 </p>
                 <AddTopic>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2">

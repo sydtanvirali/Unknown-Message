@@ -16,16 +16,15 @@ import { useRouter } from "next/navigation";
 import { Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
-export default function DeleteTopic({ 
-  topicId, 
-  children 
-}: { 
+export default function DeleteTopic({
+  topicId,
+  children,
+}: {
   topicId: string;
   children?: React.ReactNode;
 }) {
   const [deleteTopic, { isLoading }] = useDeleteTopicMutation();
   const router = useRouter();
-  
   const handleDelete = async () => {
     try {
       const res = await deleteTopic(topicId).unwrap();
@@ -47,7 +46,7 @@ export default function DeleteTopic({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         {children || (
-          <Button 
+          <Button
             variant="destructive"
             className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
           >
@@ -62,10 +61,13 @@ export default function DeleteTopic({
             <div className="flex items-center justify-center w-10 h-10 bg-red-100 dark:bg-red-900 rounded-full">
               <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
             </div>
-            <AlertDialogTitle className="text-xl">Delete Topic</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl">
+              Delete Topic
+            </AlertDialogTitle>
           </div>
           <AlertDialogDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            Are you absolutely sure you want to delete this topic? This action cannot be undone and will permanently delete:
+            Are you absolutely sure you want to delete this topic? This action
+            cannot be undone and will permanently delete:
             <ul className="mt-3 space-y-1 text-sm">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
@@ -83,10 +85,8 @@ export default function DeleteTopic({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-medium">
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogCancel className="font-medium">Cancel</AlertDialogCancel>
+          <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
             className="bg-red-600 hover:bg-red-700 text-white font-medium"

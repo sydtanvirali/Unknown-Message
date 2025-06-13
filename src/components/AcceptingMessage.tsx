@@ -13,7 +13,8 @@ export default function AcceptingMessage({ topicId }: { topicId: string }) {
   const [isAccepting, setIsAccepting] = useState(false);
 
   const { data, isLoading } = useGetAcceptingMessagesQuery(topicId);
-  const [setAcceptingMessages, { isLoading: isUpdating }] = useSetAcceptingMessagesMutation();
+  const [setAcceptingMessages, { isLoading: isUpdating }] =
+    useSetAcceptingMessagesMutation();
 
   useEffect(() => {
     if (data?.data?.isAcceptingMessages !== undefined) {
@@ -33,13 +34,9 @@ export default function AcceptingMessage({ topicId }: { topicId: string }) {
         );
         setIsAccepting(checked);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      if (error?.data?.message) {
-        toast.error(error.data.message);
-      } else {
-        toast.error("Failed to update message acceptance status");
-      }
+      toast.error("Failed to update message acceptance status");
       // Revert the switch if the update failed
       setIsAccepting(!checked);
     }
@@ -54,17 +51,16 @@ export default function AcceptingMessage({ topicId }: { topicId: string }) {
           <MessageCircleOff className="w-5 h-5 text-red-600 dark:text-red-400" />
         )}
         <div className="flex flex-col">
-          <Label 
-            htmlFor="isAccepting" 
+          <Label
+            htmlFor="isAccepting"
             className="font-semibold text-gray-900 dark:text-white cursor-pointer"
           >
             {isAccepting ? "Accepting Messages" : "Not Accepting Messages"}
           </Label>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            {isAccepting 
-              ? "People can send you anonymous messages" 
-              : "New messages are disabled"
-            }
+            {isAccepting
+              ? "People can send you anonymous messages"
+              : "New messages are currently disabled"}
           </span>
         </div>
       </div>
