@@ -32,13 +32,9 @@ export default function DeleteTopic({
         toast.success(res.message || "Topic deleted successfully");
         router.push("/");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      if (error?.data?.message) {
-        toast.error(error.data.message);
-      } else {
-        toast.error("Failed to delete topic");
-      }
+      toast.error("Failed to delete topic");
     }
   };
 

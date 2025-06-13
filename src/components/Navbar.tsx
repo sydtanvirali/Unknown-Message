@@ -5,7 +5,6 @@ import {
   CircleUser,
   LayoutDashboard,
   LogOut,
-  Menu,
 } from "lucide-react";
 import Link from "next/link";
 import {

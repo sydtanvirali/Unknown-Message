@@ -74,7 +74,7 @@ export default function MessagePage({
       } else {
         toast.error(res.message || "Message failed to send.");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Something went wrong.");
     }
